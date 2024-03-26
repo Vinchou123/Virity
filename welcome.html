@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon espace</title>
+    <style>
+		.modal {
+			display: none; /* Ajout de cette ligne */
+			/* Autres styles */
+		}
+		.open-file {
+			background-color: rgb(255, 255, 255);
+			width: 140px;
+			height: 45px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 20px;
+			border: 1px solid rgb(217, 217, 217);
+			font-size: 15px;
+			cursor: pointer;
+			transition: all 0.3s;
+			border-radius: 10px;
+		  }
+		  .file-wrapper {
+			width: 15px;
+			height: auto;
+			display: flex;
+			align-items: flex-end;
+			justify-content: center;
+			position: relative;
+		  }
+		  .file-wrapper svg {
+			width: 100vw;
+		  }
+		  .file-front {
+			position: absolute;
+			width: 1vw;
+			height: calc(1.2vh);
+			border: 2px solid rgb(0, 0, 0);
+			border-bottom: 1px solid black;
+			transform: skewX(-40deg);
+			transform-origin: bottom right;
+			background-color: white;
+			transition: all 0.5s;
+			bottom: 0;
+		  }
+		  .open-file:hover .file-front {
+			height: 1vh;
+			transform-origin: bottom right;
+			transform: skewX(-55deg);
+		  }
+		  .open-file:hover {
+			box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.048);
+		  }
+		  
+		
+		
+            .bin-button {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 55px;
+                height: 55px;
+                border-radius: 15px;
+                background-color: rgb(255, 95, 95);
+                cursor: pointer;
+                border: 3px solid rgb(255, 201, 201);
+                transition-duration: 0.3s;
+            }
+            .bin-bottom {
+                width: 15px;
+            }
+            .bin-top {
+                width: 17px;
+                transform-origin: right;
+                transition-duration: 0.3s;
+            }
+            .bin-button:hover .bin-top {
+                transform: rotate(45deg);
+            }
+            .bin-button:hover {
+                background-color: rgb(255, 0, 0);
+            }
+            .bin-button:active {
+                transform: scale(0.9);
+            }
+			
+        </style>
+</head>
+<body>
+
+    <h1>Bonjour %s! </h1>
+    <p>Vous êtes connecté avec succès !</p>
+    <button id="deleteAccountBtn" type="button" class="inline-flex items-center px-4 py-2 bg-red-600 transition ease-in-out delay-75 hover:bg-red-700 text-white text-sm font-medium rounded-md hover:-translate-y-1 hover:scale-110">
+        <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" class="h-5 w-5 mr-2 float-left" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
+        </svg>
+        <span style="float: left;">Delete</span>
+    </button>
+
+    %s <!-- Formulaire de téléchargement de fichiers -->
+    <form id="createNoteForm">
+        <label for="title">Titre :</label>
+        <input type="text" id="title" name="title" required><br><br>
+        <label for="content">Contenu :</label><br>
+        <textarea id="content" name="content" required></textarea><br><br>
+        <button type="submit">Créer la note</button>
+    </form>
+    <div id="notesContainer">
+        %s <!-- Les notes -->
+    </div>
+    <br>
+    <div id="filesContainer">
+        %s <!-- Les fichiers -->
+    </div>
+    <br>
+    <form action="/logout" method="post">
+        <button type="submit">Se déconnecter</button>
+    </form>
+    <br>
+    <!-- Boîte de dialogue modale pour la suppression du compte -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p>Êtes-vous sûr de vouloir supprimer votre compte ?</p>
+            <button id="confirmDelete">Oui</button>
+            <button id="cancelDelete">Non</button>
+        </div>
+    </div>
+    <script>
+        
+		var modal = document.getElementById("myModal");
+		var confirmBtn = document.getElementById("confirmDelete");
+		var cancelBtn = document.getElementById("cancelDelete");
+
+		// Ouvrir la boîte de dialogue modale lorsque l'utilisateur clique sur le bouton "Supprimer mon compte"
+		document.getElementById("deleteAccountBtn").addEventListener("click", function() {
+			modal.style.display = "block";
+		});
+
+		// Fermer la boîte de dialogue modale lorsque l'utilisateur clique sur le bouton d'annulation
+		cancelBtn.onclick = function() {
+			modal.style.display = "none";
+		}
+
+		// Envoyer une requête DELETE au serveur lorsque l'utilisateur confirme la suppression
+        confirmBtn.onclick = function() {
+            fetch('/delete-account', {
+                method: 'DELETE',
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Si la suppression est réussie, rediriger l'utilisateur vers la page "/goodbye"
+                    window.location.href = "/goodbye";
+                } else {
+                    console.error('Erreur lors de la suppression du compte');
+                }
+            })
+            .catch(error => console.error('Erreur lors de la suppression du compte:', error));
+        }
+	
+        // Ajouter le script JavaScript pour la suppression de notes
+        function deleteNote(noteID) {
+            fetch("/delete-note/" + noteID, {
+                method: "POST",
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Suppression réussie, rafraîchir la page pour mettre à jour la liste des notes
+                    location.reload(true);
+                } else {
+                    console.error("Erreur lors de la suppression de la note :", response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de la suppression de la note :", error);
+            });
+
+        }
+
+        function deleteFile(fileName) {
+            fetch("/delete-file/" + fileName, {
+                method: "POST",
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Suppression réussie, rafraîchir la page pour mettre à jour la liste des fichiers
+                    location.reload(true);
+                } else {
+                    console.error("Erreur lors de la suppression du fichier :", response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de la suppression du fichier :", error);
+            });
+        }
+
+        // Ajouter le script JavaScript pour la suppression de notes
+        function deleteNote(noteID) {
+            fetch("/delete-note/" + noteID, {
+                method: "POST",
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Suppression réussie, rafraîchir la page pour mettre à jour la liste des notes
+                    location.reload(true);
+                } else {
+                    console.error("Erreur lors de la suppression de la note :", response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de la suppression de la note :", error);
+            });
+
+        }
+
+        function deleteFile(fileName) {
+            fetch("/delete-file/" + fileName, {
+                method: "POST",
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Suppression réussie, rafraîchir la page pour mettre à jour la liste des fichiers
+                    location.reload(true);
+                } else {
+                    console.error("Erreur lors de la suppression du fichier :", response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de la suppression du fichier :", error);
+            });
+        }
+
+        // Ajouter le code JavaScript pour créer une nouvelle note
+        document.getElementById("createNoteForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Empêche le rechargement de la page lors de la soumission du formulaire
+
+            // Récupérer les données du formulaire
+            var formData = new FormData(this);
+
+            // Envoyer les données au serveur avec une requête AJAX
+            fetch("/create-note", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Mettre à jour la page avec la nouvelle note
+                var notesContainer = document.getElementById("notesContainer");
+                var newNoteElement = document.createElement("div");
+                newNoteElement.innerHTML = "<strong>" + data.title + "</strong><br>" + data.content;
+                notesContainer.appendChild(newNoteElement);
+
+                // Recharger automatiquement la page après un court délai pour afficher la nouvelle note
+                setTimeout(function() {
+                    location.reload(true);
+                }, 1000); // Temps d'attente en millisecondes (par exemple, 1 seconde)
+            })
+            .catch(error => {
+                console.error("Erreur lors de la création de la note :", error);
+            });
+        });
+    </script>
+
+</body>
+</html>
+

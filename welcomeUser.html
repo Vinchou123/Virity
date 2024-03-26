@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votre titre ici</title>
+    <style>
+        /* Votre CSS ici */
+        .open-file {
+            background-color: rgb(255, 255, 255);
+            width: 140px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            border: 1px solid rgb(217, 217, 217);
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 10px;
+        }
+        .file-wrapper {
+            width: 15px;
+            height: auto;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            position: relative;
+        }
+        .file-wrapper svg {
+            width: 100%;
+        }
+        .file-front {
+            position: absolute;
+            width: 100%;
+            height: 70%;
+            border: 2px solid rgb(0, 0, 0);
+            border-bottom: 1px solid black;
+            transform: skewX(-40deg);
+            transform-origin: bottom right;
+            background-color: white;
+            transition: all 0.5s;
+            bottom: 0;
+        }
+        .open-file:hover .file-front {
+            height: 50%;
+            transform-origin: bottom right;
+            transform: skewX(-55deg);
+        }
+        .open-file:hover {
+            box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.048);
+        }
+        .bin-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 55px;
+            height: 55px;
+            border-radius: 15px;
+            background-color: rgb(255, 95, 95);
+            cursor: pointer;
+            border: 3px solid rgb(255, 201, 201);
+            transition-duration: 0.3s;
+        }
+        .bin-bottom {
+            width: 15px;
+        }
+        .bin-top {
+            width: 17px;
+            transform-origin: right;
+            transition-duration: 0.3s;
+        }
+        .bin-button:hover .bin-top {
+            transform: rotate(45deg);
+        }
+        .bin-button:hover {
+            background-color: rgb(255, 0, 0);
+        }
+        .bin-button:active {
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+<body>
+    <h1>Bonjour, {{.Username}}! </h1>
+    <p>Vous êtes connecté avec succès.</p>
+    <h2>Télécharger un fichier :</h2>
+        <form action="/upload-file" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" required><br>
+            <button type="submit">Télécharger</button>
+        </form>
+    <form id="createNoteForm">
+        <label for="title">Titre :</label>
+        <input type="text" id="title" name="title" required><br><br>
+        <label for="content">Contenu :</label><br>
+        <textarea id="content" name="content" required></textarea><br><br>
+        <button type="submit">Créer la note</button>
+    </form>
+    <div id="notesContainer">
+        {{.NotesHTML}} <!-- Les notes -->
+    </div>
+    <br>
+    <div id="filesContainer">
+        {{.FilesHTML}} <!-- Les fichiers -->
+    </div>
+    <br>
+    <form action="/logout" method="post">
+        <button type="submit">Se déconnecter</button>
+    </form>
+    <br>
+    <script>
+        // Ajouter le script JavaScript ici
+        function deleteNote(noteID) {
+            // Code pour supprimer une note
+        }
+
+        function deleteFile(fileName) {
+            // Code pour supprimer un fichier
+        }
+
+        // Code pour créer une nouvelle note
+    </script>
+</body>
+</html>

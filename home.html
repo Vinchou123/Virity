@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page d'accueil</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('https://www.wallpapertip.com/wmimgs/100-1002142_server-room-purple-uhd-4k-wallpaper-server-room.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Empêcher le défilement de la page */
+            
+        }
+
+        .container {
+            text-align: center;
+            margin-left: auto;
+            margin-right: 20px;
+            position: fixed; /* Rendre le conteneur fixe */
+            top: 74%; /* Positionner le conteneur verticalement au milieu */
+            left: 50%; /* Positionner le conteneur horizontalement au milieu */
+            transform: translate(-50%, -50%); /* Centrer le conteneur */
+        }
+        h1 {
+            position: absolute;
+            top: -200%; /* Placer le titre en haut */
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centrer le conteneur */
+            
+        }
+
+        p {
+    position: absolute;
+    bottom: -135px; /* Placer la phrase au bas de son conteneur avec un espace de 10px */
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap; /* Empêcher le texte de se retourner à la ligne */
+    overflow: hidden; /* Masquer tout texte dépassant de la zone */
+    font-size: 13px; /* Réduire la taille du texte */
+}
+.btn {
+  position: fixed; /* Le bouton sera positionné de façon fixe */
+  top: -260px; /* Vous pouvez ajuster la valeur de 'top' selon votre besoin */
+  left: 50%; /* Centrer horizontalement */
+  transform: translateX(-50%);
+  z-index: 9999; /* Assurez-vous que le bouton est au-dessus de tout autre contenu */
+  height: 2rem;
+  width: 10.2rem;
+  border-radius: 5px;
+  border: 5px solid rgb(255, 255, 255);
+  cursor: pointer;
+  filter: drop-shadow(0px 0px 10px rgb(255, 255, 255));
+  animation: flickering 2s linear infinite both;
+  text-transform: uppercase;
+  background-color: rgb(92, 90, 90);
+  color: rgb(234, 234, 234);
+  font-weight: 700;
+  transition: 0.6s;
+  box-shadow: 0px 0px 60px #1f4c65;
+  -webkit-box-reflect: below 10px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.4));
+}
+
+@keyframes flickering {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  41.99% {
+    opacity: 1;
+  }
+
+  42% {
+    opacity: 0;
+  }
+
+  43% {
+    opacity: 0;
+  }
+
+  43.01% {
+    opacity: 1;
+  }
+
+  47.99% {
+    opacity: 1;
+  }
+
+  48% {
+    opacity: 0;
+  }
+
+  49% {
+    opacity: 0;
+  }
+
+  49.01% {
+    opacity: 1;
+  }
+}
+
+.text {
+  font-size: 1rem;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.btn:hover {
+  background-color: black;
+  border-radius: 0;
+}
+
+
+        .ui-btn {
+  --btn-default-bg: rgb(41, 41, 41);
+  --btn-padding: 5px 10px;
+  --btn-hover-bg: rgb(51, 51, 51);
+  --btn-transition: .3s;
+  --btn-letter-spacing: .1rem;
+  --btn-animation-duration: 1.2s;
+  --btn-shadow-color: rgba(0, 0, 0, 0.137);
+  --btn-shadow: 0 2px 10px 0 var(--btn-shadow-color);
+  --hover-btn-color: #FAC921;
+  --default-btn-color: #fff;
+  --font-size: 16px;
+  /* 👆 this field should not be empty */
+  --font-weight: 600;
+  --font-family: Menlo,Roboto Mono,monospace;
+  /* 👆 this field should not be empty */
+}
+
+/* button settings 👆 */
+
+.ui-btn {
+  box-sizing: border-box;
+  padding: var(--btn-padding);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--default-btn-color);
+  font: var(--font-weight) var(--font-size) var(--font-family);
+  background: var(--btn-default-bg);
+  border: none;
+  cursor: pointer;
+  transition: var(--btn-transition);
+  overflow: hidden;
+  box-shadow: var(--btn-shadow);
+  width: 150px; /* Longueur fixe de 150 pixels */
+            max-width: 100%; /* Bouton prendra 100% de la largeur s'il est plus court que 150px */
+            margin-bottom: 20px;
+}
+
+.ui-btn span {
+  letter-spacing: var(--btn-letter-spacing);
+  transition: var(--btn-transition);
+  box-sizing: border-box;
+  position: relative;
+  background: inherit;
+}
+
+.ui-btn span::before {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+  background: inherit;
+}
+
+.ui-btn:hover, .ui-btn:focus {
+  background: var(--btn-hover-bg);
+}
+
+.ui-btn:hover span, .ui-btn:focus span {
+  color: var(--hover-btn-color);
+}
+
+.ui-btn:hover span::before, .ui-btn:focus span::before {
+  animation: chitchat linear both var(--btn-animation-duration);
+}
+
+@keyframes chitchat {
+  0% {
+    content: "#";
+  }
+
+  5% {
+    content: ".";
+  }
+
+  10% {
+    content: "^{";
+  }
+
+  15% {
+    content: "-!";
+  }
+
+  20% {
+    content: "#$_";
+  }
+
+  25% {
+    content: "№:0";
+  }
+
+  30% {
+    content: "#{+.";
+  }
+
+  35% {
+    content: "@}-?";
+  }
+
+  40% {
+    content: "?{4@%";
+  }
+
+  45% {
+    content: "=.,^!";
+  }
+
+  50% {
+    content: "?2@%";
+  }
+
+  55% {
+    content: "\;1}]";
+  }
+
+  60% {
+    content: "?{%:%";
+    right: 0;
+  }
+
+  65% {
+    content: "|{f[4";
+    right: 0;
+  }
+
+  70% {
+    content: "{4%0%";
+    right: 0;
+  }
+
+  75% {
+    content: "'1_0<";
+    right: 0;
+  }
+
+  80% {
+    content: "{0%";
+    right: 0;
+  }
+
+  85% {
+    content: "]>'";
+    right: 0;
+  }
+
+  90% {
+    content: "4";
+    right: 0;
+  }
+
+  95% {
+    content: "2";
+    right: 0;
+  }
+
+  100% {
+    content: "";
+    right: 0;
+  }
+}
+</style>
+</head>
+<body>
+    <div class="container">
+      <button class="btn">
+        <span class="text">Coffre-fort</span>
+      </button>
+        <div class="content">
+            <div>
+                <button class="ui-btn" style="margin: 10px;">
+                    <a href="/register" style="text-decoration: none; color: white;"><span>Créer un nouvel utilisateur</span></a>
+                </button>
+                <button class="ui-btn" style="margin: 10px;">
+                    <a href="/login" style="text-decoration: none; color: white;"><span>Se connecter</span></a>
+                </button>
+            </div>
+            <p>Cliquez sur un des boutons ci-dessous pour accéder aux différentes fonctionnalités</p>
+        </div>
+    </div>
+</body>
+</html>

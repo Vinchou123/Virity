@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Form</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url('https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExdG9kYWhvaDh0eTI0MHBwcXVxeXljN2xyY203bGZqeGhwbWVueWM4aiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/AOSwwqVjNZlDO/giphy.gif');
+      background-size: 100% 100%;
+      /* Adapter l'image à la taille de l'écran */
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      /* Empêcher le défilement de la page */
+      /* Réduire la taille de l'image de moitié par rapport à sa largeur originale */
+    }
+
+    #form {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+      width: 300px;
+      height: 472px;
+      padding: 25px;
+      background-color: #161616;
+      box-shadow: 0px 15px 60px #00FF7F;
+      outline: 1px solid #2b9962;
+      border-radius: 10px;
+    }
+
+    #form-body {
+      position: absolute;
+      top: 42%;
+      right: 25px;
+      left: 25px;
+      width: 230px;
+      margin: -156px auto 0 auto;
+    }
+
+    #welcome-lines {
+      text-align: center;
+      line-height: 1;
+    }
+
+    #welcome-line-1 {
+      color: #00FF7F;
+      font-weight: 600;
+      font-size: 40px;
+    }
+
+    #welcome-line-2 {
+      color: #ffffff;
+      font-size: 18px;
+      margin-top: 17px;
+    }
+
+    #input-area {
+      margin-top: 40px;
+    }
+
+    .form-inp {
+      padding: 11px 25px;
+      background: transparent;
+      border: 1px solid #e3e3e3;
+      line-height: 1;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      /* Ajout de la marge basse uniforme */
+    }
+
+    .form-inp:focus {
+      border: 1px solid #00FF7F;
+    }
+
+    .form-inp:first-child {
+      margin-bottom: 15px;
+    }
+
+    .form-inp input {
+      width: 100%;
+      background: none;
+      font-size: 13.4px;
+      color: #00FF7F;
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .form-inp input:focus {
+      outline: none;
+    }
+
+    #submit-button-cvr {
+      margin-top: 20px;
+    }
+
+    #submit-button {
+      display: block;
+      width: 100%;
+      color: #00FF7F;
+      background-color: transparent;
+      font-weight: 600;
+      font-size: 14px;
+      margin: 0;
+      padding: 14px 13px 12px 13px;
+      border: 0;
+      outline: 1px solid #00FF7F;
+      border-radius: 8px;
+      line-height: 1;
+      cursor: pointer;
+      transition: all ease-in-out .3s;
+    }
+
+    #submit-button:hover {
+      transition: all ease-in-out .3s;
+      background-color: #00FF7F;
+      color: #161616;
+      cursor: pointer;
+    }
+
+    #forgot-pass {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    #forgot-pass a {
+      color: #868686;
+      font-size: 12px;
+      text-decoration: none;
+      text-decoration: underline;
+      /* Ajout du soulignement */
+    }
+
+    #bar {
+      position: absolute;
+      left: 50%;
+      bottom: -50px;
+      width: 28px;
+      height: 8px;
+      margin-left: -33px;
+      background-color: #00FF7F;
+      border-radius: 10px;
+    }
+
+    #bar:before,
+    #bar:after {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: #ececec;
+      border-radius: 50%;
+    }
+
+    #bar:before {
+      right: -20px;
+    }
+
+    #bar:after {
+      right: -38px;
+    }
+
+    #password-strength {
+      text-align: center;
+      margin-top: 10px;
+      color: #868686;
+      font-size: 12px;
+    }
+
+    .Btn {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 45px;
+      height: 45px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition-duration: .3s;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+      background-color: rgb(255, 65, 65);
+      top: 10px;
+      /* Ajuster la distance par rapport au bord supérieur */
+      right: -660px;
+      /* Ajuster la distance par rapport au bord droit */
+    }
+
+    /* plus sign */
+    .sign {
+      width: 100%;
+      transition-duration: .3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sign svg {
+      width: 17px;
+    }
+
+    .sign svg path {
+      fill: white;
+    }
+
+    /* text */
+    .text {
+      left: 35px;
+      /* Ajuster la position du texte vers la droite */
+      position: absolute;
+      right: 0%;
+      width: 0%;
+      opacity: 0;
+      color: white;
+      font-size: 1.2em;
+      font-weight: 600;
+      transition-duration: .3s;
+    }
+
+    /* hover effect on button width */
+    .Btn:hover {
+      width: 125px;
+      border-radius: 40px;
+      transition-duration: .3s;
+    }
+
+    .Btn:hover .sign {
+      width: 30%;
+      transition-duration: .3s;
+      padding-left: 20px;
+    }
+
+    /* hover effect button's text */
+    .Btn:hover .text {
+      opacity: 1;
+      width: 70%;
+      transition-duration: .3s;
+      padding-right: 10px;
+    }
+
+    /* button click effect*/
+    .Btn:active {
+      transform: translate(2px, 2px);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="form-ui">
+    <form action='/register' method="post" id="form">
+      <div id="form-body">
+        <div id="welcome-lines">
+          <div id="welcome-line-1">Coffre-fort</div>
+          <div id="welcome-line-2">Créer un compte </div>
+        </div>
+        <div id="input-area">
+          <div class="form-inp">
+            <input name='username' placeholder="Username" type="text" required /><br>
+          </div>
+          <div class="form-inp">
+            <input type='password' name='password' id='password' type="password" placeholder='Password' required
+              oninput='checkPasswordStrength()' /><br>
+          </div>
+          <div class="form-inp">
+            <input type='password' name='confirm_password' placeholder='Confirm Password' required /><br>
+          </div>
+          <div id='password-strength'></div> <!-- Div pour afficher le niveau de sécurité -->
+        </div>
+
+        <div id="submit-button-cvr">
+          <button id="submit-button" type="submit">Créer</button>
+        </div>
+        <div id="password-strength">
+          Niveau de sécurité du mot de passe : <span id="strength-value"></span>
+        </div>
+        
+        <div id="forgot-pass">
+          <a href="/login">Déjà un compte ? Connectez vous !</a>
+          <p><span style="color: green;">Création du compte avec succès !</span></p>    
+        </div>
+        <div id="bar"></div>
+      </div>
+    </form>
+  </div>
+  <script>
+    function checkPasswordStrength() {
+      var password = document.getElementById('password').value;
+      var strengthText = "";
+
+      if (password.length < 5) {
+        strengthText = "<span style='color: red;'>Faible</span>"; // Texte en rouge pour un mot de passe faible
+      } else if (password.length < 8) {
+        strengthText = "<span style='color: orange;'>Moyen</span>"; // Texte en orange pour un mot de passe moyen
+      } else {
+        strengthText = "<span style='color: green;'>Fort</span>"; // Texte en vert pour un mot de passe fort
+      }
+
+      document.getElementById('strength-value').innerHTML = strengthText;
+    }
+    function redirectToHome() {
+      window.location.href = "/"; // Redirection vers la page d'accueil
+    }
+
+  </script>
+  <button class="Btn" onclick="redirectToHome()">
+
+    <div class="sign"><svg viewBox="0 0 512 512">
+        <path
+          d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z">
+        </path>
+      </svg></div>
+
+    <div class="text">Home</div>
+  </button>
+</body>
+
+</html>
