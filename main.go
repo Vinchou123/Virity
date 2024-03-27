@@ -42,7 +42,7 @@ func main() {
 
 	// Connexion à MySQL
 	var err error
-	db, err = sql.Open("mysql", "ADMIN:CLE@tcp(192.168.252.2:3306)/CoffreFortDb")
+	db, err = sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/CoffreFortDb")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -114,72 +114,72 @@ func main() {
 
 // Fonction pour gérer la page d'accueil et la page d'accueil de l'administrateur
 func welcomeHandler(c echo.Context) error {
-    sess, _ := session.Get("session", c)
-    username, ok := sess.Values["username"].(string)
-    if !ok {
-        return c.Redirect(http.StatusSeeOther, "/login")
-    }
+	sess, _ := session.Get("session", c)
+	username, ok := sess.Values["username"].(string)
+	if !ok {
+		return c.Redirect(http.StatusSeeOther, "/login")
+	}
 
-    if username == "admin" {
-        htmlContent, err := ioutil.ReadFile("accueilAdmin.html")
-        if err != nil {
-            return err
-        }
-        return c.HTML(http.StatusOK, string(htmlContent))
-    }
+	if username == "admin" {
+		htmlContent, err := ioutil.ReadFile("accueilAdmin.html")
+		if err != nil {
+			return err
+		}
+		return c.HTML(http.StatusOK, string(htmlContent))
+	}
 
-    userID, ok := sess.Values["userID"].(int)
-    if !ok {
-        return c.Redirect(http.StatusSeeOther, "/login")
-    }
+	userID, ok := sess.Values["userID"].(int)
+	if !ok {
+		return c.Redirect(http.StatusSeeOther, "/login")
+	}
 
-    rows, err := db.Query("SELECT id, title, content FROM notes WHERE user_id = ?", userID)
-    if err != nil {
-        log.Println("Erreur lors de la récupération des notes :", err)
-        return err
-    }
-    defer rows.Close()
+	rows, err := db.Query("SELECT id, title, content FROM notes WHERE user_id = ?", userID)
+	if err != nil {
+		log.Println("Erreur lors de la récupération des notes :", err)
+		return err
+	}
+	defer rows.Close()
 
-    fileRows, err := db.Query("SELECT filename FROM files WHERE user_id = ?", userID)
-    if err != nil {
-        log.Println("Erreur lors de la récupération des fichiers de l'utilisateur :", err)
-        return err
-    }
-    defer fileRows.Close()
+	fileRows, err := db.Query("SELECT filename FROM files WHERE user_id = ?", userID)
+	if err != nil {
+		log.Println("Erreur lors de la récupération des fichiers de l'utilisateur :", err)
+		return err
+	}
+	defer fileRows.Close()
 
-    type Note struct {
-        ID      int
-        Title   string
-        Content string
-    }
+	type Note struct {
+		ID      int
+		Title   string
+		Content string
+	}
 
-    var notes []Note
-    for rows.Next() {
-        var note Note
-        err := rows.Scan(&note.ID, &note.Title, &note.Content)
-        if err != nil {
-            log.Println("Erreur lors de la lecture des résultats de la requête des notes :", err)
-            return err
-        }
-        notes = append(notes, note)
-    }
+	var notes []Note
+	for rows.Next() {
+		var note Note
+		err := rows.Scan(&note.ID, &note.Title, &note.Content)
+		if err != nil {
+			log.Println("Erreur lors de la lecture des résultats de la requête des notes :", err)
+			return err
+		}
+		notes = append(notes, note)
+	}
 
-    var files []string
-    for fileRows.Next() {
-        var fileName string
-        err := fileRows.Scan(&fileName)
-        if err != nil {
-            log.Println("Erreur lors de la lecture des résultats de la requête des fichiers :", err)
-            return err
-        }
-        files = append(files, fileName)
-    }
+	var files []string
+	for fileRows.Next() {
+		var fileName string
+		err := fileRows.Scan(&fileName)
+		if err != nil {
+			log.Println("Erreur lors de la lecture des résultats de la requête des fichiers :", err)
+			return err
+		}
+		files = append(files, fileName)
+	}
 
-    var notesHTML string
-    for _, note := range notes {
-        notesHTML += "<div>"
-        notesHTML += "<span><strong>" + note.Title + "</strong><br>" + note.Content + "</span>"
-        notesHTML += `<button class="bin-button" onclick="deleteNote(` + strconv.Itoa(note.ID) + `)">
+	var notesHTML string
+	for _, note := range notes {
+		notesHTML += "<div>"
+		notesHTML += "<span><strong>" + note.Title + "</strong><br>" + note.Content + "</span>"
+		notesHTML += `<button class="bin-button" onclick="deleteNote(` + strconv.Itoa(note.ID) + `)">
         <svg class="bin-top" viewBox="0 0 39 7" fill="none" xmlns="http://www.w3.org/2000/svg">
             <line y1="5" x2="39" y2="5" stroke="white" stroke-width="4"></line>
             <line x1="12" y1="1.5" x2="26.0357" y2="1.5" stroke="white" stroke-width="3"></line>
@@ -193,12 +193,12 @@ func welcomeHandler(c echo.Context) error {
             <path d="M21 6V29" stroke="white" stroke-width="4"></path>
         </svg>
     </button>`
-        notesHTML += "</div>"
-    }
+		notesHTML += "</div>"
+	}
 
-    var filesHTML string
-    for _, fileName := range files {
-        filesHTML += `<div>
+	var filesHTML string
+	for _, fileName := range files {
+		filesHTML += `<div>
         <span>` + fileName + `</span>
         <button onclick="deleteFile('` + fileName + `')">Supprimer</button>
         <button class="open-file" onclick="window.open('/view-file/` + fileName + `', '_blank')">
@@ -211,9 +211,9 @@ func welcomeHandler(c echo.Context) error {
             Open file
         </button>
     </div>`
-    }
+	}
 
-    uploadForm := `
+	uploadForm := `
         <h2>Télécharger un fichier :</h2>
         <form action="/upload-file" method="post" enctype="multipart/form-data">
             <input type="file" name="file" required><br>
@@ -221,15 +221,15 @@ func welcomeHandler(c echo.Context) error {
         </form>
     `
 
-    htmlContent, err := ioutil.ReadFile("welcome.html")
-    if err != nil {
-        return err
-    }
+	htmlContent, err := ioutil.ReadFile("welcome.html")
+	if err != nil {
+		return err
+	}
 
-    responseHTML := fmt.Sprintf(string(htmlContent), username, uploadForm, notesHTML, filesHTML)
+	responseHTML := fmt.Sprintf(string(htmlContent), username, uploadForm, notesHTML, filesHTML)
 
-     // Renvoyer la réponse HTML complète
-	 return c.HTML(http.StatusOK, responseHTML)
+	// Renvoyer la réponse HTML complète
+	return c.HTML(http.StatusOK, responseHTML)
 }
 
 func homeHandler(c echo.Context) error {
