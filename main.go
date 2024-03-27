@@ -42,7 +42,7 @@ func main() {
 
 	// Connexion à MySQL
 	var err error
-	db, err = sql.Open("mysql", "ADMIN:CLE@tcp(192.168.252.2:3306)/CoffreFortDb")
+	db, err = sql.Open("mysql", "ADMIN:CLE@tcp(0.0.0.0:3306)/CoffreFortDb")
 	if err != nil {
 		log.Fatal(err)
 	}
