@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon espace</title>
     <style>
+          body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh; /* Utilisation de min-height pour garantir que la hauteur minimale de la page est égale à la hauteur de la fenêtre d'affichage */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Centrer verticalement */
+            background-color: #f2f2f2;
+        }
+
+        .title-container {
+            text-align: center; /* Centrer horizontalement */
+            margin-bottom: 20px; /* Espacement sous le titre */
+        }
+
+        h1 {
+            margin-top: 0; /* Supprimer la marge par défaut du titre */
+        }
 		.modal {
 			display: none; /* Ajout de cette ligne */
 			/* Autres styles */
@@ -87,6 +106,37 @@
             .bin-button:active {
                 transform: scale(0.9);
             }
+             .delete-account-btn { /* Nouvelle classe pour le bouton de suppression */
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        /* Styles pour le bouton de suppression */
+        .delete-account-btn button {
+            background-color: #e53e3e;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-account-btn button:hover {
+            background-color: #c53030;
+        }
+
+        /* Styles pour l'icône du bouton de suppression */
+        .delete-account-btn svg {
+            fill: none;
+            stroke: #fff;
+            stroke-width: 2;
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
 			
         </style>
 </head>
@@ -94,7 +144,7 @@
 
     <h1>Bonjour %s! </h1>
     <p>Vous êtes connecté avec succès !</p>
-    <button id="deleteAccountBtn" type="button" class="inline-flex items-center px-4 py-2 bg-red-600 transition ease-in-out delay-75 hover:bg-red-700 text-white text-sm font-medium rounded-md hover:-translate-y-1 hover:scale-110">
+    <button id="deleteAccountBtn" type="button" class="inline-flex items-center px-4 py-2 bg-red-600 transition ease-in-out delay-75 hover:bg-red-700 text-white text-sm font-medium rounded-md hover:-translate-y-1 hover:scale-110" style="position: absolute; top: 10px; right: 10px;">
         <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" class="h-5 w-5 mr-2 float-left" xmlns="http://www.w3.org/2000/svg">
             <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
         </svg>

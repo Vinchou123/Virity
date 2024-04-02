@@ -213,13 +213,35 @@ func welcomeHandler(c echo.Context) error {
     </div>`
 	}
 
-	uploadForm := `
-        <h2>Télécharger un fichier :</h2>
-        <form action="/upload-file" method="post" enctype="multipart/form-data">
-            <input type="file" name="file" required><br>
-            <button type="submit">Télécharger</button>
-        </form>
+	// Formulaire de téléchargement de fichier HTML
+    uploadForm := `
+        <style>
+            .file-container {
+                display: flex;
+                justify-content: flex-start; /* Aligner le contenu à gauche */
+                align-items: center;
+                flex-direction: column;
+                margin-bottom: 10px;
+                 /* Ajouter une marge à gauche pour le centrage */
+            }
+
+            .file-container form {
+                text-align: left; /* Aligner le texte à gauche à l'intérieur du formulaire */
+            }
+
+            .file-container button {
+                margin-top: 10px; /* Ajouter un espace entre le champ de fichier et le bouton Télécharger */
+            }
+        </style>
+        <div class="file-container">
+            <h2>Télécharger un fichier :</h2>
+            <form action="/upload-file" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" required><br>
+                <button type="submit">Télécharger</button>
+            </form>
+        </div>
     `
+
 
 	htmlContent, err := ioutil.ReadFile("welcome.html")
 	if err != nil {
@@ -488,7 +510,7 @@ func uploadFileHandler(c echo.Context) error {
 // Fonction pour enregistrer le fichier téléchargé dans la base de données
 func saveUploadedFileToDatabase(file UploadedFile) error {
 	// Ouvrir une connexion à la base de données
-	db, err := sql.Open("mysql", "ADMIN:CLE@tcp(192.168.252.2:3306)/CoffreFortDb")
+	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/CoffreFortDb")
 	if err != nil {
 		return err
 	}
