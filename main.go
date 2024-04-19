@@ -156,6 +156,7 @@ func main() {
 // Fonction pour gérer la page d'accueil et la page d'accueil de l'administrateur
 func welcomeHandler(c echo.Context) error {
 	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/CoffreFortDb")
+
 	sess, _ := session.Get("session", c)
 	username, ok := sess.Values["username"].(string)
 	if !ok {
@@ -297,7 +298,6 @@ func welcomeHandler(c echo.Context) error {
 }
 
 func homeHandler(c echo.Context) error {
-	
 	// Lecture du fichier HTML
 	tmpl, err := template.ParseFiles("home.html")
 	if err != nil {
@@ -367,11 +367,10 @@ func createNoteHandler(c echo.Context) error {
 	return c.HTML(http.StatusOK, htmlContent)
 }
 func deleteNoteHandler(c echo.Context) error {
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/CoffreFortDb")
 	noteID := c.Param("id")
 
 	// Supprimer la note correspondante dans la base de données
-	_, err = db.Exec("DELETE FROM notes WHERE id = ?", noteID)
+	_, err := db.Exec("DELETE FROM notes WHERE id = ?", noteID)
 	if err != nil {
 		log.Println("Erreur lors de la suppression de la note :", err)
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Erreur lors de la suppression de la note"})
