@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"time"
+	"strings"
 
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
@@ -41,12 +42,52 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// Connexion à MySQL
-	var err error
-	db, err = sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/CoffreFortDb")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/")
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    // Assurez-vous que la connexion est établie
+    err = db.Ping()
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Créer la base de données CoffreFortDb si elle n'existe pas
+    _, err = db.Exec("CREATE DATABASE IF NOT EXISTS CoffreFortDb")
+    if err != nil {
+        log.Fatal("Failed to create database:", err)
+    }
+
+    // Utiliser la base de données CoffreFortDb
+    _, err = db.Exec("USE CoffreFortDb")
+    if err != nil {
+        log.Fatal("Failed to select database:", err)
+    }
+
+    // Lire le fichier SQL
+    sqlFile, err := ioutil.ReadFile("sauvergarde.sql")
+    if err != nil {
+        log.Fatal(err)
+    }
+    sqlCommands := string(sqlFile)
+
+    // Exécuter chaque commande SQL du fichier
+    commands := strings.Split(sqlCommands, ";")
+    for _, command := range commands {
+        if strings.TrimSpace(command) == "" {
+            continue
+        }
+        _, err := db.Exec(command)
+        if err != nil {
+            fmt.Println("FAILED to execute command:", command)
+            log.Println(err)
+        }
+    }
+
+    fmt.Println("Database has been populated successfully.")
+
 	// Vérifier si l'utilisateur admin existe déjà
 	var count int
 	err = db.QueryRow("SELECT COUNT(*) FROM users WHERE username = ?", "admin").Scan(&count)
@@ -114,6 +155,7 @@ func main() {
 
 // Fonction pour gérer la page d'accueil et la page d'accueil de l'administrateur
 func welcomeHandler(c echo.Context) error {
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/CoffreFortDb")
 	sess, _ := session.Get("session", c)
 	username, ok := sess.Values["username"].(string)
 	if !ok {
@@ -255,6 +297,7 @@ func welcomeHandler(c echo.Context) error {
 }
 
 func homeHandler(c echo.Context) error {
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/CoffreFortDb")
 	// Lecture du fichier HTML
 	tmpl, err := template.ParseFiles("home.html")
 	if err != nil {
@@ -553,6 +596,7 @@ func loginHandler(c echo.Context) error {
 
 // Traitement du formulaire de connexion
 func loginPostHandler(c echo.Context) error {
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/CoffreFortDb")
 	// Récupérer le nom d'utilisateur et le mot de passe à partir du formulaire
 	username := c.FormValue("username")
 	password := c.FormValue("password")
@@ -560,7 +604,7 @@ func loginPostHandler(c echo.Context) error {
 	// Vérifier si les informations d'identification sont correctes en comparant avec celles stockées dans la base de données
 	var storedPassword string
 	var userID int
-	err := db.QueryRow("SELECT id, password FROM users WHERE username = ?", username).Scan(&userID, &storedPassword)
+	err = db.QueryRow("SELECT id, password FROM users WHERE username = ?", username).Scan(&userID, &storedPassword)
 	if err != nil {
 		// Gérer le cas où l'utilisateur n'existe pas
 		log.Println("Utilisateur non trouvé :", err)
@@ -635,12 +679,15 @@ func registerHandler(c echo.Context) error {
 
 // Traitement du formulaire d'inscription
 func registerPostHandler(c echo.Context) error {
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/CoffreFortDb")
+	
+	
 	username := c.FormValue("username")
 	password := c.FormValue("password")
 	confirm_password := c.FormValue("confirm_password") // Récupérer le champ de confirmation du mot de passe
 	// Vérifier si l'utilisateur existe déjà
 	var count int
-	err := db.QueryRow("SELECT COUNT(*) FROM users WHERE username = ?", username).Scan(&count)
+	err = db.QueryRow("SELECT COUNT(*) FROM users WHERE username = ?", username).Scan(&count)
 	if err != nil {
 		log.Println("Erreur lors de la vérification de l'existence de l'utilisateur :", err)
 		return err
