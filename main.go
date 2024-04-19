@@ -317,6 +317,7 @@ func homeHandler(c echo.Context) error {
 
 // Gestionnaire de route pour créer une note
 func createNotePostHandler(c echo.Context) error {
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/CoffreFortDb")
 	// Récupérer le titre et le contenu de la note à partir du formulaire
 	title := c.FormValue("title")
 	content := c.FormValue("content")
@@ -367,10 +368,11 @@ func createNoteHandler(c echo.Context) error {
 	return c.HTML(http.StatusOK, htmlContent)
 }
 func deleteNoteHandler(c echo.Context) error {
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/CoffreFortDb")
 	noteID := c.Param("id")
 
 	// Supprimer la note correspondante dans la base de données
-	_, err := db.Exec("DELETE FROM notes WHERE id = ?", noteID)
+	_, err = db.Exec("DELETE FROM notes WHERE id = ?", noteID)
 	if err != nil {
 		log.Println("Erreur lors de la suppression de la note :", err)
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Erreur lors de la suppression de la note"})
@@ -552,6 +554,7 @@ func uploadFileHandler(c echo.Context) error {
 
 // Fonction pour enregistrer le fichier téléchargé dans la base de données
 func saveUploadedFileToDatabase(file UploadedFile) error {
+	
 	// Ouvrir une connexion à la base de données
 	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/CoffreFortDb")
 	if err != nil {
@@ -635,6 +638,7 @@ func loginPostHandler(c echo.Context) error {
 
 // Page pour afficher tous les utilisateurs existants
 func listUsersHandler(c echo.Context) error {
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/CoffreFortDb")
 	// Exécuter une requête SELECT pour récupérer tous les utilisateurs avec leurs informations
 	rows, err := db.Query("SELECT username, created_at FROM users")
 	if err != nil {
@@ -783,13 +787,14 @@ func deleteFormHandler(c echo.Context) error {
 
 // Fonction pour supprimer un utilisateur
 func deleteHandler(c echo.Context) error {
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/CoffreFortDb")
 	// Récupérer le nom d'utilisateur et le mot de passe à partir du formulaire
 	username := c.FormValue("username")
 	password := c.FormValue("password")
 
 	// Vérifier si l'utilisateur existe
 	var storedPassword string
-	err := db.QueryRow("SELECT password FROM users WHERE username = ?", username).Scan(&storedPassword)
+	err = db.QueryRow("SELECT password FROM users WHERE username = ?", username).Scan(&storedPassword)
 	if err != nil {
 		// L'utilisateur n'existe pas dans la base de données
 		log.Println("Erreur lors de la vérification de l'existence de l'utilisateur :", err)
@@ -870,10 +875,11 @@ func viewFileHandler(c echo.Context) error {
 
 // Fonction pour supprimer un fichier de la base de données et du système de fichiers
 func deleteFileHandler(c echo.Context) error {
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/CoffreFortDb")
 	fileName := c.Param("fileName")
 
 	// Supprimer le fichier de la base de données
-	_, err := db.Exec("DELETE FROM files WHERE filename = ?", fileName)
+	_, err = db.Exec("DELETE FROM files WHERE filename = ?", fileName)
 	if err != nil {
 		log.Println("Erreur lors de la suppression du fichier de la base de données :", err)
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Erreur lors de la suppression du fichier de la base de données"})
@@ -891,6 +897,7 @@ func deleteFileHandler(c echo.Context) error {
 }
 
 func deleteAccountHandler(c echo.Context) error {
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/CoffreFortDb")
 	// Récupérer l'ID de l'utilisateur à partir de la session
 	userID, err := getUserIDFromSession(c)
 	if err != nil {
